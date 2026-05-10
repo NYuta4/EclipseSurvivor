@@ -20,6 +20,9 @@ public class BattleUIController : MonoBehaviour
     [Header("Timer UI")]
     [SerializeField] private TextMeshProUGUI timerText;
 
+    [Header("Level Up UI")]
+    [SerializeField] private LevelUpSelectionUI levelUpSelectionUI;
+
     private PlayerStats playerStats;
 
     void Start()
@@ -123,6 +126,13 @@ public class BattleUIController : MonoBehaviour
         {
             levelText.text = $"{playerStats.CurrentLevel}";
         }
+    }
+
+    public void ShowLevelUpSelection(PlayerStats playerStats)
+    {
+        if (levelUpSelectionUI == null) return;
+
+        levelUpSelectionUI.Show(playerStats);
     }
 
     private void UpdateTimerUI()

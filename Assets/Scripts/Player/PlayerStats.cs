@@ -11,6 +11,10 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int currentExp = 0;
     [SerializeField] private int nextLevelExp = 5;
 
+    [Header("Combat")]
+    [SerializeField] private int attackPower = 1;
+    [SerializeField] private float fireIntervalMultiplier = 1f;
+
     private bool isDead = false;
 
     private PlayerController controller;
@@ -18,12 +22,16 @@ public class PlayerStats : MonoBehaviour
     private Collider2D col;
     private SpriteRenderer spriteRenderer;
 
+    private BattleUIController battleUIController;
+
     public int MaxHp => maxHp;
     public int CurrentHp => currentHp;
 
     public int CurrentLevel => currentLevel;
     public int CurrentExp => currentExp;
     public int NextLevelExp => nextLevelExp;
+    public int AttackPower => attackPower;
+    public float FireIntervalMultiplier => fireIntervalMultiplier;
 
 
 
@@ -35,6 +43,8 @@ public class PlayerStats : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        battleUIController = FindObjectOfType<BattleUIController>();
     }
 
     public void TakeDamage(int damage)
@@ -66,12 +76,33 @@ public class PlayerStats : MonoBehaviour
     private void LevelUp()
     {
         currentLevel++;
-
-        currentExp = 0;
-
         nextLevelExp += 5;
 
-        Debug.Log("Level Up!");
+        Debug.Log("Level Up : " + currentLevel);
+
+        if (battleUIController != null)
+        {
+            battleUIController.ShowLevelUpSelection(this);
+        }
+    }
+
+    public void UpgradeAttackPower()
+    {
+        attackPower += 1;
+        Debug.Log("Attack Power Up : " + attackPower);
+    }
+
+    public void UpgradeFireRate()
+    {
+        fireIntervalMultiplier *= 0.9f;
+        Debug.Log("Fire Rate Up : " + fireIntervalMultiplier);
+    }
+
+    public void UpgradeMaxHp()
+    {
+        maxHp += 2;
+        currentHp += 2;
+        Debug.Log("Max HP Up : " + maxHp);
     }
 
     private void Die()
