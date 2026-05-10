@@ -3,10 +3,16 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour
 {
+    [Header("Speed")]
     public float moveSpeed = 2f;
-    public int maxHp = 3;
 
+    [Header("HP")]
+    public int maxHp = 3;
     private int currentHp;
+
+    [SerializeField]
+    [Header("ExpObj")]
+    private GameObject expGemPrefab;
 
     private Transform player;
     private Rigidbody2D rb;
@@ -50,6 +56,11 @@ public class EnemyBase : MonoBehaviour
 
         if (currentHp <= 0)
         {
+            Instantiate(
+                expGemPrefab,
+                transform.position,
+                Quaternion.identity
+            );
             Die();
         }
     }

@@ -163,3 +163,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2
   maxHp: 1
+  expGemPrefab: {fileID: 6344931798001577141, guid: e2024c5791410b14c89e37dbad267482, type: 3}

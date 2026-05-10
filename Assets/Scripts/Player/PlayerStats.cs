@@ -2,8 +2,14 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+    [Header("HP")]
     public int maxHp = 10;
-    public int currentHp;
+    public int currentHp; 
+
+    [Header("Level")]
+    [SerializeField] private int currentLevel = 1;
+    [SerializeField] private int currentExp = 0;
+    [SerializeField] private int nextLevelExp = 5;
 
     private bool isDead = false;
 
@@ -11,6 +17,15 @@ public class PlayerStats : MonoBehaviour
     private Rigidbody2D rb;
     private Collider2D col;
     private SpriteRenderer spriteRenderer;
+
+    public int MaxHp => maxHp;
+    public int CurrentHp => currentHp;
+
+    public int CurrentLevel => currentLevel;
+    public int CurrentExp => currentExp;
+    public int NextLevelExp => nextLevelExp;
+
+
 
     void Start()
     {
@@ -32,6 +47,31 @@ public class PlayerStats : MonoBehaviour
         {
             Die();
         }
+    }
+
+    public void AddExp(int value)
+    {
+        if (isDead) return;
+
+        currentExp += value;
+
+        while (currentExp >= nextLevelExp)
+        {
+            currentExp -= nextLevelExp;
+            LevelUp();
+        }
+    }
+
+
+    private void LevelUp()
+    {
+        currentLevel++;
+
+        currentExp = 0;
+
+        nextLevelExp += 5;
+
+        Debug.Log("Level Up!");
     }
 
     private void Die()
