@@ -5,6 +5,8 @@ public class BaseUIController : MonoBehaviour
 {
     public void OnClickStartBattle()
     {
+        GameManager.Instance.StartRun();
+
         SceneManager.LoadScene("Battle");
     }
     public void OnClickBack()
