@@ -89,7 +89,7 @@ public class PlayerStats : MonoBehaviour
     public void UpgradeAttackPower()
     {
         attackPower += 1;
-        Debug.Log("Attack Power Up : " + attackPower);
+        Debug.Log("Attack Power : " + attackPower);
     }
 
     public void UpgradeFireRate()

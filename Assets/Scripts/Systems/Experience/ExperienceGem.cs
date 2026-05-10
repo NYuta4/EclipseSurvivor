@@ -12,8 +12,7 @@ public class ExperienceGem : MonoBehaviour
         if (player != null)
         {
             player.AddExp(expValue);
+            Destroy(gameObject);
         }
-
-        Destroy(gameObject);
     }
 }

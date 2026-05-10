@@ -3,12 +3,19 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 8f;
+
     private Vector3 dir;
+    private int damage = 1;
 
     public void SetDirection(Vector3 value)
     {
-        dir = value;
+        dir = value.normalized;
         Destroy(gameObject, 3f);
+    }
+
+    public void SetDamage(int value)
+    {
+        damage = value;
     }
 
     void Update()
@@ -18,18 +25,14 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
-        {
-            Debug.Log("hit");
+        EnemyBase enemy = other.GetComponentInParent<EnemyBase>();
 
-            EnemyBase enemy = other.GetComponentInParent<EnemyBase>();
+        if (enemy == null) return;
 
-            if (enemy != null)
-            {
-                enemy.TakeDamage(1);
-            }
+        Debug.Log("hit");
 
-            Destroy(gameObject);
-        }
+        enemy.TakeDamage(damage);
+
+        Destroy(gameObject);
     }
 }
