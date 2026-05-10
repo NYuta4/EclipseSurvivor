@@ -1,29 +1,35 @@
-using System;
 using UnityEngine;
 
 public class EnemyBase : MonoBehaviour
 {
-    [Header("Speed")]
-    public float moveSpeed = 2f;
+    [SerializeField] private EnemyData enemyData;
+    [SerializeField] private GameObject expGemPrefab;
 
-    [Header("HP")]
-    public int maxHp = 3;
     private int currentHp;
-
-    [SerializeField]
-    [Header("ExpObj")]
-    private GameObject expGemPrefab;
-
     private Transform player;
     private Rigidbody2D rb;
-
     private bool isDead = false;
+
+    private float nextDamageTime = 0f;
+    [SerializeField] private float damageInterval = 1f;
 
     void Start()
     {
-        currentHp = maxHp;
+        if (enemyData == null)
+        {
+            Debug.LogError("EnemyData Ç™ê›íËÇ≥ÇÍÇƒÇ¢Ç‹ÇπÇÒÅB");
+            return;
+        }
 
-        player = GameObject.FindWithTag("Player").transform;
+        currentHp = enemyData.maxHp;
+
+        GameObject playerObject = GameObject.FindWithTag("Player");
+
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -33,19 +39,24 @@ public class EnemyBase : MonoBehaviour
 
         Vector2 dir = (player.position - transform.position).normalized;
 
-        rb.velocity = dir * moveSpeed;
+        rb.velocity = dir * enemyData.moveSpeed;
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D other)
     {
         if (isDead) return;
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            collision.gameObject
-                .GetComponent<PlayerStats>()
-                .TakeDamage(1);
-        }
+        PlayerStats playerStats = other.GetComponentInParent<PlayerStats>();
+
+        if (playerStats == null) return;
+
+        if (Time.time < nextDamageTime) return;
+
+        playerStats.TakeDamage(enemyData.contactDamage);
+
+        nextDamageTime = Time.time + damageInterval;
+
+        Debug.Log("Player Damage");
     }
 
     public void TakeDamage(int damage)
@@ -56,11 +67,6 @@ public class EnemyBase : MonoBehaviour
 
         if (currentHp <= 0)
         {
-            Instantiate(
-                expGemPrefab,
-                transform.position,
-                Quaternion.identity
-            );
             Die();
         }
     }
@@ -70,13 +76,37 @@ public class EnemyBase : MonoBehaviour
         isDead = true;
 
         GameManager.Instance.CurrentRun.killCount++;
-        Debug.Log(GameManager.Instance.CurrentRun.killCount);
+
+        DropExp();
 
         rb.velocity = Vector2.zero;
         rb.simulated = false;
 
-        GetComponent<Collider2D>().enabled = false;
+        Collider2D enemyCollider = GetComponent<Collider2D>();
+
+        if (enemyCollider != null)
+        {
+            enemyCollider.enabled = false;
+        }
 
         Destroy(gameObject);
+    }
+
+    private void DropExp()
+    {
+        if (expGemPrefab == null) return;
+
+        GameObject expGem = Instantiate(
+            expGemPrefab,
+            transform.position,
+            Quaternion.identity
+        );
+
+        ExperienceGem gem = expGem.GetComponent<ExperienceGem>();
+
+        if (gem != null)
+        {
+            gem.SetExpValue(enemyData.expDropValue);
+        }
     }
 }

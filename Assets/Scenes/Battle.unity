@@ -1650,7 +1650,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cae734d3dbf7f4d48931e727e5a18ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 9198537363858449816, guid: 272bf5ce28103dd4b8930e6c45cb9d19, type: 3}
+  slimePrefab: {fileID: 9198537363858449816, guid: 272bf5ce28103dd4b8930e6c45cb9d19, type: 3}
+  wolfPrefab: {fileID: 9198537363858449816, guid: c76c1a96a72563944aa065aeda070adb, type: 3}
+  tankPrefab: {fileID: 9198537363858449816, guid: 4098eda4fb4b4414ab67988c7117a487, type: 3}
+  baseSpawnInterval: 2
+  spawnRadius: 10
 --- !u!4 &1130995557
 Transform:
   m_ObjectHideFlags: 0
