@@ -11,6 +11,7 @@ public class AutoShooter : MonoBehaviour
     void Start()
     {
         playerStats = GetComponent<PlayerStats>();
+
         fireTimer = baseFireInterval;
     }
 
@@ -21,6 +22,7 @@ public class AutoShooter : MonoBehaviour
         if (fireTimer <= 0f)
         {
             Fire();
+
             fireTimer = GetCurrentFireInterval();
         }
     }
@@ -38,6 +40,7 @@ public class AutoShooter : MonoBehaviour
     private void Fire()
     {
         GameObject enemy = GameObject.FindWithTag("Enemy");
+
         if (enemy == null) return;
 
         Vector3 dir = (enemy.transform.position - transform.position).normalized;

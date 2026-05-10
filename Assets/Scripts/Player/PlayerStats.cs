@@ -95,7 +95,13 @@ public class PlayerStats : MonoBehaviour
     public void UpgradeFireRate()
     {
         fireIntervalMultiplier *= 0.9f;
-        Debug.Log("Fire Rate Up : " + fireIntervalMultiplier);
+
+        if (fireIntervalMultiplier < 0.3f)
+        {
+            fireIntervalMultiplier = 0.3f;
+        }
+
+        Debug.Log("Fire Interval Multiplier : " + fireIntervalMultiplier);
     }
 
     public void UpgradeMaxHp()
