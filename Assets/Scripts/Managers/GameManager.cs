@@ -1,6 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -48,6 +49,47 @@ public class GameManager : MonoBehaviour
         CurrentRun.level = 1;
     }
 
+    public bool IsWeaponUnlocked(WeaponData weaponData)
+    {
+        if (weaponData == null) return false;
+        if (SaveData == null) return false;
+        if (SaveData.unlockedWeaponIds == null) return false;
+
+        return SaveData.unlockedWeaponIds.Contains(weaponData.weaponId);
+    }
+
+    public bool TryUnlockWeapon(WeaponData weaponData)
+    {
+        if (weaponData == null) return false;
+        if (SaveData == null) return false;
+
+        if (SaveData.unlockedWeaponIds == null)
+        {
+            SaveData.unlockedWeaponIds = new List<string>();
+        }
+
+        if (IsWeaponUnlocked(weaponData))
+        {
+            Debug.Log($"{weaponData.weaponName} is already unlocked");
+            return false;
+        }
+
+        if (SaveData.core < weaponData.price)
+        {
+            Debug.Log("Not enough core");
+            return false;
+        }
+
+        SaveData.core -= weaponData.price;
+        SaveData.unlockedWeaponIds.Add(weaponData.weaponId);
+
+        SaveManager.Instance.Save();
+
+        Debug.Log($"{weaponData.weaponName} unlocked");
+
+        return true;
+    }
+
     public void SetGameOverPanel(GameObject panel)
     {
         gameOverPanel = panel;
@@ -71,6 +113,8 @@ public class GameManager : MonoBehaviour
         {
             SaveData.highKillCount = CurrentRun.killCount;
         }
+
+        SaveData.core += CurrentRun.killCount;
     }
 
     public void GameOver()
